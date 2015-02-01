@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="financial-advisor-unit" transaction-type="RESOURCE_LOCAL">
+        <!-- Use Hibernate OGM provider: configuration will be transparent -->
+        <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+
+        <class>com.mars_crater.entities.TransactionEntity</class>
+        <class>com.mars_crater.entities.ExpenseTypeEntity</class>
+        <class>com.mars_crater.entities.TransactionExpenseEntity</class>
+
+        <properties>
+            <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/fa"/>
+            <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+            <property name="openjpa.ConnectionUserName" value="adminfa"/>
+            <property name="openjpa.ConnectionPassword" value="mozart"/>
+            <property name="openjpa.Log" value="DefaultLevel=TRACE, Runtime=TRACE, Tool=TRACE, SQL=TRACE"/>
+
+            <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+        </properties>
+    </persistence-unit>
+</persistence>

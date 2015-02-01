@@ -12,6 +12,7 @@
         <module>financial-advisor-webapp</module>
         <module>financial-advisor-core</module>
         <module>financial-advisor-model</module>
+        <module>financial-advisor-sdk</module>
     </modules>
 
 
