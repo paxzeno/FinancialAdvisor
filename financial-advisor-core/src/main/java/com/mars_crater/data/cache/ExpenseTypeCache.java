@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class ExpenseTypeCache {
 
-    private Map<Integer, ExpenseTypeEntity> expenseTypeMap = new HashMap<Integer, ExpenseTypeEntity>();
+    private Map<Integer, ExpenseTypeEntity> expenseTypeMap = new HashMap<>();
 
     public void addExpenseTypeList(List<ExpenseTypeEntity> expenseTypeList) {
         for (ExpenseTypeEntity expenseTypeEntity : expenseTypeList) {

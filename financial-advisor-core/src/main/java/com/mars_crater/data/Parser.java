@@ -10,9 +10,9 @@ import com.mars_crater.data.sdk.NBExtract;
 import com.mars_crater.data.sdk.NBTransaction;
 import com.mars_crater.data.sdk.TransactionTypeEnum;
 import com.mars_crater.data.sdk.TransactionValue;
+import com.mars_crater.data.utils.TagMaker;
 import com.mars_crater.entities.ExpenseTypeEntity;
 import com.mars_crater.entities.TransactionEntity;
-import com.mars_crater.entities.TransactionExpenseEntity;
 
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -34,21 +34,27 @@ import java.util.stream.Stream;
  */
 public class Parser {
 
-    public static BankExtract bankExtract;
+    public static BankExtract BANK_EXTRACT;
+
+    public static CacheManager CACHE_MANAGER;
+
+    //TODO Possibly go to cache manager in the future.
+    public static TagMaker TAG_MAKER;
 
     public static void extractLine(String rawData) {
         try {
-            final CacheManager cacheManager = new CacheManager(BDUtils.getConnection());
             final String[] split = rawData.split("\t");
 
             if (split.length > 1) {
                 NBTransaction nbTransaction = new NBTransaction(split[0], split[1], split[2], createTransactionValue(split[3]), createBalanceValue(split[4]));
-                bankExtract.put(nbTransaction);
+                BANK_EXTRACT.put(nbTransaction);
                 final TransactionEntity transactionEntity = nb2transaction(nbTransaction);
-                final ExpenseTypeEntity expenseTypeEntity = cacheManager.getExpenseTypeCache().getExpenseTypeById(1);
+                final ExpenseTypeEntity expenseTypeEntity = CACHE_MANAGER.getExpenseTypeCache().getExpenseTypeById(1);
                 BDUtils.insertTransaction(transactionEntity);
-                BDUtils.insertExpenseType(expenseTypeEntity);
-                BDUtils.insertTrnsactionExpenseType(nb2transactionExpense(transactionEntity, expenseTypeEntity, nbTransaction));
+                BDUtils.insertExpenseType(nb2expense(nbTransaction));
+
+                //TODO: TEST DRIVE SOLUTION
+                TAG_MAKER.lookingForTags(nbTransaction.getTransactionDescription());
             }
         } catch (NumberFormatException ex) {
             System.out.println("ops something went wrong!");
@@ -56,14 +62,6 @@ public class Parser {
             System.out.println("ops something went wrong! Generally speaking. like: " + ex.getMessage());
             ex.printStackTrace();
         }
-    }
-
-    private static TransactionExpenseEntity nb2transactionExpense(TransactionEntity transactionEntity, ExpenseTypeEntity expenseTypeEntity, NBTransaction nbTransaction) {
-        final TransactionExpenseEntity transactionExpense = new TransactionExpenseEntity();
-        transactionExpense.setTransaction(transactionEntity);
-        transactionExpense.setExpenseType(expenseTypeEntity);
-        transactionExpense.setTransactionDescription(nbTransaction.getTransactionDescription());
-        return transactionExpense;
     }
 
     private static ExpenseTypeEntity nb2expense(NBTransaction nbTransaction) {
@@ -127,8 +125,10 @@ public class Parser {
 
     public static void main(String[] args) throws IOException, HeuristicRollbackException, HeuristicMixedException, NotSupportedException, RollbackException, SystemException {
         final Stream<String> nbFfileStream = Files.lines(Paths.get("../resources/rawData/nbCopyPaste.txt"));
-        bankExtract = new NBExtract();
         BDUtils.createConnection();
+        BANK_EXTRACT = new NBExtract();
+        CACHE_MANAGER = new CacheManager(BDUtils.getConnection());
+        TAG_MAKER = new TagMaker();
         nbFfileStream.forEach(Parser::extractLine);
         BDUtils.closeConnection();
     }

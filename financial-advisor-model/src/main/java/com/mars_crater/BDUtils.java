@@ -1,8 +1,8 @@
 package com.mars_crater;
 
 import com.mars_crater.entities.ExpenseTypeEntity;
+import com.mars_crater.entities.TagEntity;
 import com.mars_crater.entities.TransactionEntity;
-import com.mars_crater.entities.TransactionExpenseEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,10 +18,12 @@ import javax.transaction.SystemException;
  */
 public final class BDUtils {
 
+    private static EntityManagerFactory emf;
+
     private static EntityManager em;
 
     public static void createConnection() throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("financial-advisor-unit");
+        emf = Persistence.createEntityManagerFactory("financial-advisor-unit");
         em = emf.createEntityManager();
         em.getTransaction().begin();
     }
@@ -41,12 +43,13 @@ public final class BDUtils {
         em.persist(expenseType);
     }
 
-    public static void insertTrnsactionExpenseType(TransactionExpenseEntity transactionExpense) {
-        em.persist(transactionExpense);
+    public static void insertTag(TagEntity tag) {
+        em.persist(tag);
     }
 
     public static void closeConnection() {
         em.getTransaction().commit();
         em.close();
+        emf.close();
     }
 }
