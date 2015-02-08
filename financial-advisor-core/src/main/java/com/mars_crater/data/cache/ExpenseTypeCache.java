@@ -1,7 +1,9 @@
 package com.mars_crater.data.cache;
 
+import com.mars_crater.data.sdk.vo.ExpenseTypeVO;
 import com.mars_crater.entities.ExpenseTypeEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,5 +27,17 @@ public class ExpenseTypeCache {
 
     public ExpenseTypeEntity getExpenseTypeById(Integer expenseTypeId) {
         return this.expenseTypeMap.get(expenseTypeId);
+    }
+
+    public List<ExpenseTypeVO> getAll() {
+        List<ExpenseTypeVO> expenseTypeList = new ArrayList<>(expenseTypeMap.values().size());
+        for (ExpenseTypeEntity expenseTypeEntity : expenseTypeMap.values()) {
+            final ExpenseTypeVO expenseType = new ExpenseTypeVO();
+            expenseType.setId(expenseTypeEntity.getId());
+            expenseType.setHeritage(expenseTypeEntity.getHeritage());
+            expenseType.setExpenseDescription(expenseTypeEntity.getExpenseDescription());
+            expenseTypeList.add(expenseType);
+        }
+        return expenseTypeList;
     }
 }

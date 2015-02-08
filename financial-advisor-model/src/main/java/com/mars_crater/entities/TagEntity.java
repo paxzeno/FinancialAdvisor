@@ -5,14 +5,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Tag information used to categorize each transaction.
  */
 @Entity
 @Table(name = "T_TAG")
-public class TagEntity {
+@NamedQueries(
+        @NamedQuery(name = TagEntity.GET_ALL_TAGS, query = "SELECT t FROM TagEntity t")
+)
+public class TagEntity implements Serializable {
+
+    private static final long serialVersionUID = -7307445259445513388L;
+
+    public static final String GET_ALL_TAGS = "TagEntity.GetAllTags";
+
+    public TagEntity() {
+    }
+
+    public TagEntity(String name) {
+        this.name = name;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

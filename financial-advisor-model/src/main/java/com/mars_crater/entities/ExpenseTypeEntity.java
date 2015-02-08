@@ -29,8 +29,8 @@ public class ExpenseTypeEntity implements Serializable {
     @Column(name = "EXPENSE_TYPE_ID")
     private int id;
 
-    @Column(name = "EXPENSE_SUB_TYPE_ID")
-    private int subType;
+    @Column(name = "HERITAGE")
+    private int heritage;
 
     @Column(name = "EXPENSE_TYPE_DESC")
     private String expenseDescription;
@@ -43,12 +43,12 @@ public class ExpenseTypeEntity implements Serializable {
         this.id = id;
     }
 
-    public int getSubType() {
-        return subType;
+    public int getHeritage() {
+        return heritage;
     }
 
-    public void setSubType(int subType) {
-        this.subType = subType;
+    public void setHeritage(int heritage) {
+        this.heritage = heritage;
     }
 
     public String getExpenseDescription() {

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Getting Started: Serving Web Content</title>
+    <meta  http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'Hello, ' + ${name} + '!'" />
+
+    <div class="expenseslist" th:unless="${#lists.isEmpty(allExpensesTypes)}">
+        <h2>List of expenses types</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th th:text="#{expenses.id}">id</th>
+                    <th th:text="#{expenses.heritage}">heritage</th>
+                    <th th:text="#{expenses.expenseDescription}">expenseDescription</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="expenses : *{allExpensesTypes}">
+                    <th th:text="#{expenses.id}">1</th>
+                    <th th:text="#{expenses.heritage}">1</th>
+                    <th th:text="#{expenses.expenseDescription}">description</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.mars_crater.data.sdk;
+package com.mars_crater.data.sdk.entities;
 
 import java.util.ArrayList;
 import java.util.List;

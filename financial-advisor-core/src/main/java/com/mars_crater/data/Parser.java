@@ -2,14 +2,14 @@ package com.mars_crater.data;
 
 import com.mars_crater.BDUtils;
 import com.mars_crater.data.cache.CacheManager;
-import com.mars_crater.data.sdk.Balance;
-import com.mars_crater.data.sdk.BalanceTypeEnum;
-import com.mars_crater.data.sdk.BankExtract;
-import com.mars_crater.data.sdk.CurrencyEnum;
-import com.mars_crater.data.sdk.NBExtract;
-import com.mars_crater.data.sdk.NBTransaction;
-import com.mars_crater.data.sdk.TransactionTypeEnum;
-import com.mars_crater.data.sdk.TransactionValue;
+import com.mars_crater.data.sdk.entities.Balance;
+import com.mars_crater.data.sdk.entities.BalanceTypeEnum;
+import com.mars_crater.data.sdk.entities.BankExtract;
+import com.mars_crater.data.sdk.entities.CurrencyEnum;
+import com.mars_crater.data.sdk.entities.NBExtract;
+import com.mars_crater.data.sdk.entities.NBTransaction;
+import com.mars_crater.data.sdk.entities.TransactionTypeEnum;
+import com.mars_crater.data.sdk.entities.TransactionValue;
 import com.mars_crater.data.utils.TagMaker;
 import com.mars_crater.entities.ExpenseTypeEntity;
 import com.mars_crater.entities.TransactionEntity;
@@ -39,7 +39,7 @@ public class Parser {
     public static CacheManager CACHE_MANAGER;
 
     //TODO Possibly go to cache manager in the future.
-    public static TagMaker TAG_MAKER;
+//    public static TagMaker TAG_MAKER;
 
     public static void extractLine(String rawData) {
         try {
@@ -51,10 +51,10 @@ public class Parser {
                 final TransactionEntity transactionEntity = nb2transaction(nbTransaction);
                 final ExpenseTypeEntity expenseTypeEntity = CACHE_MANAGER.getExpenseTypeCache().getExpenseTypeById(1);
                 BDUtils.insertTransaction(transactionEntity);
-                BDUtils.insertExpenseType(nb2expense(nbTransaction));
+//                BDUtils.insertExpenseType(nb2expense(nbTransaction));
 
                 //TODO: TEST DRIVE SOLUTION
-                TAG_MAKER.lookingForTags(nbTransaction.getTransactionDescription());
+                TagMaker.lookingForTags(CACHE_MANAGER.getTagCache().getCacheMap(), nbTransaction.getTransactionDescription());
             }
         } catch (NumberFormatException ex) {
             System.out.println("ops something went wrong!");
@@ -66,7 +66,7 @@ public class Parser {
 
     private static ExpenseTypeEntity nb2expense(NBTransaction nbTransaction) {
         final ExpenseTypeEntity expenseType = new ExpenseTypeEntity();
-        expenseType.setSubType(1);
+        expenseType.setHeritage(1);
         expenseType.setExpenseDescription("Generic Expense");
         return expenseType;
     }
@@ -128,7 +128,6 @@ public class Parser {
         BDUtils.createConnection();
         BANK_EXTRACT = new NBExtract();
         CACHE_MANAGER = new CacheManager(BDUtils.getConnection());
-        TAG_MAKER = new TagMaker();
         nbFfileStream.forEach(Parser::extractLine);
         BDUtils.closeConnection();
     }
