@@ -12,16 +12,16 @@
         <table>
             <thead>
                 <tr>
-                    <th th:text="#{expenses.id}">id</th>
-                    <th th:text="#{expenses.heritage}">heritage</th>
-                    <th th:text="#{expenses.expenseDescription}">expenseDescription</th>
+                    <th>id</th>
+                    <th>heritage</th>
+                    <th>expenseDescription</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="expenses : *{allExpensesTypes}">
-                    <th th:text="#{expenses.id}">1</th>
-                    <th th:text="#{expenses.heritage}">1</th>
-                    <th th:text="#{expenses.expenseDescription}">description</th>
+                <tr th:each="expenses,iterationStatus : ${allExpensesTypes}">
+                    <th th:text="${expenses.id}">1</th>
+                    <th th:text="${expenses.heritage}">1</th>
+                    <th th:text="${expenses.expenseDescription}">description</th>
                 </tr>
             </tbody>
         </table>
