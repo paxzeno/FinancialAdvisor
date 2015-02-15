@@ -2,6 +2,7 @@ package com.mars_crater.controller;
 
 import com.mars_crater.data.sdk.model.ModelFacade;
 import com.mars_crater.data.sdk.vo.ExpenseTypeVO;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,14 +17,16 @@ import java.util.List;
 @Controller
 public class GreetingController {
 
+    private static final Logger LOGGER = Logger.getLogger(GreetingController.class);
+
     private ModelFacade modelFacade = new ModelFacade();
 
     @ModelAttribute("allExpensesTypes")
     public List<ExpenseTypeVO> getAllExpenses() {
-        System.out.println("LISTING EXPENSES!!!!!");
+        LOGGER.debug("LISTING EXPENSES!!!!!");
         final List<ExpenseTypeVO> allExpenseType = modelFacade.getAllExpenseType();
         for (ExpenseTypeVO expenseTypeVO : allExpenseType) {
-            System.out.println(expenseTypeVO.toString());
+            LOGGER.debug(expenseTypeVO.toString());
         }
         return allExpenseType;
     }
@@ -33,4 +36,5 @@ public class GreetingController {
         model.addAttribute("name", name);
         return "greeting";
     }
+
 }
