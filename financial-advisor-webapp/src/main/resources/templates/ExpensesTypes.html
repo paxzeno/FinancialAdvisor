@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Getting Started: Serving Web Content</title>
+    <meta  http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="webjars/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        // <![CDATA[
+        var addNRremove = ' <a class="add" href="#" title="Add child expense type">[+]</a> <a class="remove" href="#" title="Remove this expense type">[-]</a>';
+
+        function addNode(node, nodeName) {
+            var nextId = calculateId();
+            var nodeId = node.id;
+            var ul = getChildUl(node);
+            $(ul).append("<li id='"+ nextId +"' class='" + nodeId + "'>" + nodeName + addNRremove + "</li>");
+            console.log("created node on parent: " + nodeId + " with Id: " + nextId);
+            return nextId;
+        }
+
+        function removeNode(node) {
+            console.log("removing node: " + node.id + " and childes.");
+            $(node).remove();
+        }
+
+        function getChildUl(liNode) {
+            var ul = $(liNode).find("ul").get(0);
+            if (ul != null) {
+                return ul;
+            }
+            $(liNode).append("<ul></ul>");
+            return $(liNode).find("ul").get(0);
+        }
+
+        function calculateId() {
+            //TODO optimize, get gap id where that id > then parent.
+            var nextId = 1;
+            var divRoot = $( "div.root" );
+            var liDivRoot = $(divRoot).find("li").get();
+            $(liDivRoot).each(function( key, li ) {
+                if (nextId <= li.id) {
+                    nextId = Number(li.id) + 1;
+                }
+            });
+            return nextId;
+        }
+
+        $(document).ready(function(){
+            var divRoot = $( "div.root" )
+            var liDivRoot = $(divRoot).find("li").get();
+            var ul;
+            $(divRoot).empty();
+            $.each( $(liDivRoot), function( key, value ) {
+                $(value).append(addNRremove);
+                if ( value.className == "0" ) {
+                    ul = getChildUl(divRoot);
+                    $(ul).append(value);
+                } else {
+                    var parent = $(divRoot).find("#" + value.className).get(0);
+                    ul = getChildUl(parent);
+                    $(ul).append(value);
+                }
+            });
+
+            $(document).on("click", "a.add", function() {
+                console.log("-----start adding node-----");
+                var description = prompt("Please enter node name");
+                nextId = addNode(this.parentElement, description);
+//                var jsonObject = [{ id:15, heritage:0, expenseDescription:"new" }, { id:16, heritage:15, expenseDescription:"new2" }];
+                var jsonObject = [{ id:nextId, heritage:this.parentElement.id, expenseDescription: description}];
+                console.log(JSON.stringify(jsonObject));
+                $.ajax({
+                   type : 'POST',
+                    url : "/addExpenseType",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    data : JSON.stringify(jsonObject)/*,
+                    success: function (jsonObject) { alert(jsonObject); },
+                    failure: function (jsonObject) {
+                        alert(jsonObject);
+                    }*/
+                });
+            });
+
+            $(document).on("click", "a.remove", function() {
+                console.log("-----start removing node-----");
+                removeNode(this.parentElement);
+            });
+        });
+        // ]]>
+    </script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="expenseslist" th:unless="${#lists.isEmpty(allExpensesTypes)}">
+        <h2>List of expenses types</h2>
+        <div class="feedback"></div>
+        <!--<form action="#" th:action="@{/submitExpensesType}" th:object="${allExpensesTypes}" method="post">-->
+            <div class="root">
+                <ul>
+                    <li th:each="expenses,stat : ${allExpensesTypes}" th:id="${expenses.id}" th:class="${expenses.heritage}"
+                        th:text="${expenses.expenseDescription}">description</li>
+                </ul>
+            </div>
+            <!--<input id="submit" type="submit" value="Save" />-->
+        <!--</form>-->
+    </div>
+</body>
+</html>

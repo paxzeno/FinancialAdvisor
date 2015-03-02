@@ -31,18 +31,31 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>jstl</groupId>-->
-            <!--<artifactId>jstl</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
         </dependency>
     </dependencies>
 
+    <properties>
+        <logging.level.org.springframework.web>DEBUG</logging.level.org.springframework.web>
+    </properties>
     <build>
         <plugins>
             <plugin>

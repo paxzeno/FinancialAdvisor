@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Getting Started: Serving Web Content</title>
+    <meta  http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="webjars/jquery/2.1.3/jquery.min.js"></script>
+    <title>teste</title>
+</head>
+<body>
+    <h2>submit expense</h2>
+    <div class="feedback"></div>
+    <form action="#" th:action="@{/submitExpensesType}" th:object="${expenseTypeVO}" method="post">
+        <input type="text" th:field="*{id}" />
+        <input type="text" th:field="*{heritage}" />
+        <input type="text" th:field="*{expenseDescription}" />
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>
